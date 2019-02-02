@@ -1,0 +1,22 @@
+{
+  "addons": [
+
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-pgbouncer"
+    },
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "description": "API for tukhe.com",
+  "env": {
+  },
+  "formation": {
+  },
+  "name": "tukhe-api",
+  "scripts": {
+  },
+  "stack": "heroku-18"
+}
