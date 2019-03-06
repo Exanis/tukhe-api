@@ -11,12 +11,19 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+
 import dj_database_url
 import django_heroku
 
+
+def env(name):
+    if name in os.environ:
+        return os.environ[name]
+    return ''
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -29,7 +36,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,9 +45,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'corsheaders',
+    'rest_framework',
+    'social_django',
+    'rest_social_auth',
+    'knox',
+
+    'core',
+    'v1'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -72,16 +88,56 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'tukhe.wsgi.application'
 
+AUTHENTICATION_BACKENDS = (
+#    'social_core.backends.facebook.FacebookOAuth2',
+#    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',  # OAuth1.0
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# Django Rest Framework
+# https://www.django-rest-framework.org/#installation
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+}
+
+# CORS
+FRONTEND_URL = env('FRONTEND_URL')
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+
+# Social login
+# https://github.com/st4lk/django-rest-social-auth
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+AUTH_REDIRECT_URL = "{}auth".format(FRONTEND_URL)
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)
+
+
+# Twitter
+SOCIAL_AUTH_TWITTER_KEY = env('TWITTER_KEY')
+SOCIAL_AUTH_TWITTER_SECRET = env('TWITTER_SECRET')
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
     'default': dj_database_url.config(
-        conn_max_age=300
+        conn_max_age=300,
+
     )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -101,7 +157,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -115,11 +170,13 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-django_heroku.settings(locals())
+if 'LOCAL' not in os.environ:
+    django_heroku.settings(locals())
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

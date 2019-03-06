@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/tukhe-api.iml" filepath="$PROJECT_DIR$/.idea/tukhe-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../tukhe-frontend/.idea/tukhe-frontend.iml" filepath="$PROJECT_DIR$/../tukhe-frontend/.idea/tukhe-frontend.iml" />
     </modules>
   </component>
 </project>
