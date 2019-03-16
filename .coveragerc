@@ -1,0 +1,9 @@
+[run]
+source = core
+    v1
+omit =
+    .env/*
+    */tests/*
+    */management/*
+    */migrations/*  
+    */apps.py

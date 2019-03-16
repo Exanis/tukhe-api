@@ -122,6 +122,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
+    'core.pipelines.map_social_to_account'
 )
 
 
@@ -135,7 +136,6 @@ SOCIAL_AUTH_TWITTER_SECRET = env('TWITTER_SECRET')
 DATABASES = {
     'default': dj_database_url.config(
         conn_max_age=300,
-
     )
 }
 

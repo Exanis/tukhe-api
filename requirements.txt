@@ -9,3 +9,9 @@ djangorestframework
 cryptography
 django-rest-knox
 rest-social-auth
+drf-nested-routers
+requests
+python-twitter
+feedparser
+python-dateutil
+coverage

@@ -14,9 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path, include
-
+from rest_social_auth import urls_knox
 
 urlpatterns = [
     path('', include('core.urls')),
     path('api/login/', include('rest_social_auth.urls_knox')),
+    path('api/v1/', include('v1.urls'))
 ]
