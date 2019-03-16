@@ -15,3 +15,4 @@ python-twitter
 feedparser
 python-dateutil
 coverage
+codecov
